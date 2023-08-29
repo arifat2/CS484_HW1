@@ -241,7 +241,8 @@ app.post("/create_user_prompt", async (req, res) => {
 // 1. Add a middleware to handle authentication
 // 2. The middleware files have been already created for you.
 // 3. Figure out based on funtionality which will be appropriate to be used here.
-app.put("/update_user_prompt/:id", replaceHere(), async (req, res) => {
+// app.put("/update_user_prompt/:id", replaceHere(), async (req, res) => {
+app.put("/update_user_prompt/:id", authenticateInternal(), async (req, res) => {
   try {
     // TO DO - Add Authentication for this route
     // Check if the user has permissions (proper role) to approve / complete the request
@@ -272,28 +273,35 @@ app.put("/update_user_prompt/:id", replaceHere(), async (req, res) => {
 // 1. Add a middleware to handle authentication
 // 2. The middleware files have been already created for you.
 // 3. Figure out based on funtionality which will be appropriate to be used here.
-app.delete("/delete_user_prompt/:id", replaceHere(), async (req, res) => {
-  try {
-    // TO DO - Add Authentication for this route
-    // Check if the user has permission's (proper role) to cancel the request
-    // If user has permissions then proceed else return json: {"msg": false}
+// app.delete("/delete_user_prompt/:id", replaceHere(), async (req, res) => {
+app.delete(
+  "/delete_user_prompt/:id",
+  authenticateInternal(),
+  async (req, res) => {
+    try {
+      // TO DO - Add Authentication for this route
+      // Check if the user has permission's (proper role) to cancel the request
+      // If user has permissions then proceed else return json: {"msg": false}
 
-    const cancellationResult = await crudOperations.deletePrompt(req.params.id);
+      const cancellationResult = await crudOperations.deletePrompt(
+        req.params.id
+      );
 
-    if (cancellationResult === true) {
-      console.log(`Deleted prompt for id -> ${req.params.id}`);
-      res.json({ msg: true });
-    } else {
-      console.log(cancellationResult);
-      res.json({ msg: false });
+      if (cancellationResult === true) {
+        console.log(`Deleted prompt for id -> ${req.params.id}`);
+        res.json({ msg: true });
+      } else {
+        console.log(cancellationResult);
+        res.json({ msg: false });
+      }
+    } catch (error) {
+      console.error(error);
+      res.json({
+        msg: "There was an issue in deleting the prompt. Check server logs",
+      });
     }
-  } catch (error) {
-    console.error(error);
-    res.json({
-      msg: "There was an issue in deleting the prompt. Check server logs",
-    });
   }
-});
+);
 
 app.delete("/delete_all_prompts", authenticateInternal(), async (req, res) => {
   try {
