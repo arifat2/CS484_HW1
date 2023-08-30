@@ -119,10 +119,17 @@ app.get("/logout", function (req, res, next) {
 
 app.get("/get_prompt_list", authenticateInternal(), async (req, res) => {
   try {
-    // WRITE
-    //      YOUR
-    //          CODE
-    //              HERE.
+    const email = req.user.email;
+
+    // Fetching prompt list for the given email
+    const data = await crudOperations.getPromptList(email);
+
+    // Checking if data is neither null nor false, and sending appropriate response
+    if (data != null && data) {
+      res.json({ msg: data });
+    } else {
+      res.json({ msg: [] });
+    }
   } catch (error) {
     console.error(error);
     res.json({
