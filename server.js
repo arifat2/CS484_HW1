@@ -50,13 +50,21 @@ app.get("/", (req, res) => {
   // TO DO - Add Authentication for this route . If the user is authenticated redirect to the dashboard else send the login.html page
   // Hints - Have Look inside req object for the Authentication method.
   // Based on return value of that method: If true: redirect response(res) to /dashboard else send login.html in response(res).
-  res.sendFile("login.html", { root: path.join(__dirname, "views") });
+  if (req.isAuthenticated()) {
+    res.redirect("/dashboard");
+  } else {
+    res.sendFile("login.html", { root: path.join(__dirname, "views") });
+  }
 });
 
 app.get("/login", (req, res) => {
   // TO DO - Add Authentication for this route . If the user is authenticated redirect to the dashboard else send the login.html page
   // // Hints - Have Look inside req object for the Authentication method.
-  res.sendFile("login.html", { root: path.join(__dirname, "views") });
+  if (req.isAuthenticated()) {
+    res.redirect("/dashboard");
+  } else {
+    res.sendFile("login.html", { root: path.join(__dirname, "views") });
+  }
 });
 
 app.get("/create-user", (req, res) => {
@@ -68,7 +76,12 @@ app.get("/create-user", (req, res) => {
 // 1. Add a middleware to handle authentication. Look at how middlewares are added to a route.
 // 2. Good Part - The middleware files have been already created for you.
 // 3. Figure out based on funtionality which will be appropriate to be used here.
-app.get("/update-user", (req, res) => {
+
+// app.get("/update-user", (req, res) => {
+//   res.sendFile("./views/update_user.html", { root: __dirname });
+// });
+
+app.get("/update-user", middleware(), (req, res) => {
   res.sendFile("./views/update_user.html", { root: __dirname });
 });
 
@@ -76,7 +89,12 @@ app.get("/update-user", (req, res) => {
 // Add a middleware to handle authentication.
 // The middleware files have been already created for you.
 // Figure out based on funtionality which will be appropriate to be used here.
-app.get("/dashboard", (req, res) => {
+
+// app.get("/dashboard", (req, res) => {
+//   res.sendFile("./views/dashboard.html", { root: __dirname });
+// });
+
+app.get("/dashboard", middleware(), (req, res) => {
   res.sendFile("./views/dashboard.html", { root: __dirname });
 });
 
@@ -214,7 +232,7 @@ app.post("/update_user", async (req, res) => {
 // 1. Add a middleware to handle authentication
 // 2. The middleware files have been already created for you.
 // 3. Figure out based on funtionality which will be appropriate to be used here.
-app.post("/create_user_prompt", async (req, res) => {
+app.post("/create_user_prompt", authenticateInternal(), async (req, res) => {
   try {
     const { prompt } = req.body;
     const { name, email } = req.user;
