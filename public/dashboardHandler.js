@@ -1,8 +1,7 @@
 function changeInput(value) {
   // Write code to get the element for "input"
   // Set the inputElement.value as value
-  // const inputElement = document.querySelector("input");
-  // inputElement.value = value;
+  inputElement.value = value;
 }
 
 async function handleEdit(e) {
@@ -107,7 +106,7 @@ async function updateUserPrompt(promptId, updatedPrompt) {
       headers: {
         "Content-Type": "application/json",
       },
-      // Convert 'payload' to a JSON string for the request body
+      // credentials: "same-origin",
       body: JSON.stringify(payload),
     });
 
