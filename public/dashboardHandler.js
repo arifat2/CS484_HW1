@@ -1,6 +1,8 @@
 function changeInput(value) {
   // Write code to get the element for "input"
   // Set the inputElement.value as value
+  // const inputElement = document.querySelector("input");
+  // inputElement.value = value;
 }
 
 async function handleEdit(e) {
@@ -38,10 +40,18 @@ async function populateHistory() {
         //    2.1 Get the attribute from "data-id", say id.
         //    2.2 Call the deletePrompt() and pass id as argument. See if it is an async function or sync function. You need to handle promise in case of async.
         //    2.3 Remove the divElement.
+        deleteButton.addEventListener("click", async () => {
+          const id = divElement.getAttribute("data-id");
+          await deletePrompt(id);
+          divElement.remove();
+        });
 
         // 3. Append textField and deleteButton as children to the divElement.
+        divElement.appendChild(textField);
+        divElement.appendChild(deleteButton);
 
         // 4. Append the divElement as a child to the historyElemenet.
+        historyElement.appendChild(divElement);
       });
     } else {
       console.log("Error fetching prompt list");
@@ -91,9 +101,24 @@ async function updateUserPrompt(promptId, updatedPrompt) {
   // 3. Get the jsonData from response's json.
   // 4. Check if jsonData.msg is true? If yes return true: Else return false
   try {
-    // const response = Make PUT request. Replace with Code.
+    // Making a PUT request to the update_user_prompt
+    const response = await fetch(`/update_user_prompt/${promptId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Convert 'payload' to a JSON string for the request body
+      body: JSON.stringify(payload),
+    });
+
+    // Getting jsonData from response's json.
+    const jsonData = await response.json();
+
     if (response.status === 200) {
       // Write code here.
+      if (jsonData.msg === true) {
+        return true;
+      }
     } else {
       console.log("Error updating Prompt.");
     }
