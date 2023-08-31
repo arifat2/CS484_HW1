@@ -218,15 +218,23 @@ app.post("/login", passport.authenticate("local"), (req, res) => {
 // 6. Handle the result as following:
 //    6.1. If result is true return a json response as {msg: true}
 //    6.2. Else return {msg: false}
-app.post("/update_user", async (req, res) => {
+app.post("/update_user", authenticateInternal(), async (req, res) => {
   try {
     let { firstname, lastname, emailId } = req.body;
 
+    // update user details
     // const result = replaceFunctionHere(a, b, c);
-    // WRITE
-    //      YOUR
-    //          CODE
-    //              HERE.
+    const result = await crudOperations.updateUser(
+      firstname,
+      lastname,
+      emailId
+    );
+
+    if (result) {
+      res.json({ msg: true });
+    } else {
+      res.json({ msg: false });
+    }
   } catch (error) {
     console.log(error);
     res.json({
