@@ -125,7 +125,7 @@ app.get("/get_prompt_list", authenticateInternal(), async (req, res) => {
     const data = await crudOperations.getPromptList(email);
 
     // Checking if data is neither null nor false, and sending appropriate response
-    if (data != null && data) {
+    if (data != null && data !== false) {
       res.json({ msg: data });
     } else {
       res.json({ msg: [] });
